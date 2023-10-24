@@ -9,7 +9,7 @@ func main() {
 	//roi_file := flag.String("roi", "", "path to roi atlas/mask nifti image")
 	//flag.Parse()
 	//img := util.Read_nifti(*roi_file)
-   img := util.Read_nifti("/home/foranw/mybrain/mybrain_2017-08_7t.nii.gz")
+   img := util.Read_nifti("wf-mp2rage-7t_2017087.nii.gz")
 	sum := 0.0
 	for _, v := range img {
 		sum += v

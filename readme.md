@@ -21,14 +21,16 @@ out/
 
 ### AMD desktop
 ```
-3dBrickStat -slow /home/foranw/mybrain/mybrain_2017-08_7t.nii.gz ran
-    2.08 ± 0.09 times faster than deno run --allow-read scripts/niimean.js
-    2.10 ± 0.15 times faster than scripts/niimean.m
-    2.66 ± 0.11 times faster than scripts/niimean.py
-    2.94 ± 0.14 times faster than julia scripts/niimean.jl
-    3.81 ± 0.25 times faster than target/release/niimean
-    3.98 ± 0.17 times faster than niimean/niimean
-    5.25 ± 0.29 times faster than scripts/niimean.R
+fslstats wf-mp2rage-7t_2017087.nii.gz -m ran
+    1.39 ± 0.01 times faster than 3dBrickStat -slow wf-mp2rage-7t_2017087.nii.gz
+    2.93 ± 0.04 times faster than scripts/niimean.m
+    2.96 ± 0.05 times faster than deno run --allow-read scripts/niimean.js
+    3.75 ± 0.04 times faster than scripts/niimean.py
+    4.13 ± 0.06 times faster than julia scripts/niimean.jl
+    5.27 ± 0.07 times faster than target/release/niimean
+    5.65 ± 0.05 times faster than niimean/niimean
+    7.30 ± 0.10 times faster than scripts/niimean.R
+
 ```
 
 ### Intel Xeon server
@@ -65,6 +67,9 @@ make NRUN=10
 
 Benchmarking uses [`hyperfine`](https://github.com/sharkdp/hyperfine).
 
+* c
+  - `3dBrickstat` is from AFNI
+  - `fslstats` is from fsl
 * octave
   1. download spm12 and extract to `~/Downoads/spm12` [`scripts/niimean.m`](scripts/niimean.m) hardcodes addpath 
   1. compile `cd src// && make PLATFORM=octave install`

@@ -3,5 +3,5 @@
 # 20231023WF - init
 #   benchmark test
 
-x <- oro.nifti::readNIfTI('/home/foranw/mybrain/mybrain_2017-08_7t.nii.gz')
+x <- oro.nifti::readNIfTI('wf-mp2rage-7t_2017087.nii.gz')
 mean(x@.Data)

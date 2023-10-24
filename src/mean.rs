@@ -3,7 +3,7 @@ use log::{info};
 fn main() -> Result<(), nifti::error::NiftiError> {
     env_logger::init();
     info!("reading niftis");
-    let x = ReaderOptions::new().read_file("/home/foranw/mybrain/mybrain_2017-08_7t.nii.gz")?;
+    let x = ReaderOptions::new().read_file("wf-mp2rage-7t_2017087.nii.gz")?;
     let xvol = x.into_volume().into_ndarray::<f32>()?;
 
     info!("mean calc");

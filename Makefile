@@ -4,7 +4,7 @@ all:  out/$(CPU)-versions.txt
 
 ## rust
 target/release/niimean: target/release/voxcor
-target/release/voxcor:
+target/release/voxcor: $(wildcard src/*rs)
 	cargo build --release
 
 ## go
@@ -14,10 +14,11 @@ voxcor: main.go util/util.go
 niimean/niimean: niimean/main.go util/util.go
 	cd $(@D) && go build
 
-##
-out/$(CPU)-stats.csv: niimean/niimean target/release/niimean $(wildcard scripts/*) | out/
+## benchmark
+out/$(CPU)-stats.csv: niimean/niimean target/release/niimean $(wildcard scripts/*) | out/ # tpl-MNI152NLin2009cAsym_res-02_T1w.nii.gz
 	hyperfine --warmup 1 -m $(NRUN)  --export-csv $@ \
-		"3dBrickStat -slow /home/foranw/mybrain/mybrain_2017-08_7t.nii.gz"\
+		"3dBrickStat -slow wf-mp2rage-7t_2017087.nii.gz"\
+		"fslstats wf-mp2rage-7t_2017087.nii.gz -m"\
 		"deno run --allow-read scripts/niimean.js" \
 	   scripts/niimean.m \
 		niimean/niimean \
@@ -32,3 +33,8 @@ out/$(CPU)-versions.txt: out/$(CPU)-stats.csv | out/
 
 %/:
 	mkdir $@
+
+# mni template is too small. using larger non-skullstripped brain
+## use MNI template as the image tor all tests
+#tpl-MNI152NLin2009cAsym_res-02_T1w.nii.gz:
+#	curl -O https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-02_T1w.nii.gz
