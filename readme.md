@@ -35,6 +35,14 @@ fslstats wf-mp2rage-7t_2017087.nii.gz -m ran
 
 ### Intel Xeon server
 ```
+  'fslstats wf-mp2rage-7t_2017087.nii.gz -m' ran
+    1.53 ± 0.05 times faster than '3dBrickStat -slow wf-mp2rage-7t_2017087.nii.gz'
+    2.69 ± 0.09 times faster than 'deno run --allow-read scripts/niimean.js'
+    4.31 ± 0.11 times faster than 'julia scripts/niimean.jl'
+    4.39 ± 0.29 times faster than 'target/release/niimean'
+    4.93 ± 0.20 times faster than 'scripts/niimean.py'
+    7.35 ± 0.24 times faster than 'scripts/niimean.R'
+    8.36 ± 0.28 times faster than 'niimean/niimean'
 ```
 
 ### Notes
@@ -53,7 +61,6 @@ Javascript is painful to write. Both it and the golang version organize the nift
 
 Processor makes a differnce in the shootout.
 
-TODO: [julia](https://docs.juliahub.com/PackageCompiler/MMV8C/1.2.1/devdocs/binaries_part_2.html)
 
 ## Run
 
@@ -72,18 +79,36 @@ Benchmarking uses [`hyperfine`](https://github.com/sharkdp/hyperfine).
   - `fslstats` is from fsl
 * octave
   1. download spm12 and extract to `~/Downoads/spm12` [`scripts/niimean.m`](scripts/niimean.m) hardcodes addpath 
-  1. compile `cd src// && make PLATFORM=octave install`
+  1. compile `cd src/ && make PLATFORM=octave install`
 * julia
-  1. install package `add NIfTI` 
+  1. install package in repl like `] add NIfTI` 
 * R
   1. `install.packages('oro.nifti')`
 * deno
   - first run will pull in npm package `nifti-reader-js`
 
+### Debain stable (12.0 "bookworm") in 2023
+
+go (1.19 vs 1.21) and octave (7 vs 8.3) are out of date on debian stable.
+To use newer versions on rhea, update the path to include the compile-from-recent-source bin dir:
+
+```
+export PATH="/opt/ni_tools/utils/go/bin:$PATH"
+export PATH="/opt/ni_tools/octave-8.3.0/bin:$PATH"
+```
 
 ## TODO
 
-- [ ] implement various styles (loop vs vector)
-- [ ] get expert goland and rust advice/implementation
+- [ ] get expert goland and rust advice/implementation (should be faster?)
+- [ ] implement various styles (and more complex calculations)
+  - [ ] loop vs vector; expect python loop to be especially slow
+  - [ ] parallel processing
+- [ ] preform within interpreter time benchmarking (remove startup costs)
 - [ ] add nifti to repo or Makefile. use that instead of "mybrain"
 - [ ] hyperfine per run and code to average. dont want to run full suit for change in single file
+- [ ] containerize benchmarks
+- [ ] other implementations
+  - [ ] julia's APL implementation
+  - [ ] fix perl's `PDL::IO::Nifti` to work with compresssed images (remove extra seek)
+  - [ ] common lisp or guile version (ffi w/ niftilib)
+  - [ ] [compile julia](https://docs.juliahub.com/PackageCompiler/MMV8C/1.2.1/devdocs/binaries_part_2.html)
