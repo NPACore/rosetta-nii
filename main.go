@@ -62,7 +62,7 @@ func main() {
 		}
 	}
 
-	debug("per roi stats")
+	debug("generating per roi stats")
 	fmt.Printf("roi\tnvox\tmean_x\tmean_y\tr\n")
 	for k, v := range roi_idx {
 		mean_x := stat.Mean(v.x, nil)
