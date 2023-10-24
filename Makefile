@@ -1,6 +1,9 @@
+.PHONY: all check
 NRUN := 100
 CPU := $(shell perl -lne 'print $$1=~s/[-()\s]/_/gr and exit if m/model.name.*: (.*)/' < /proc/cpuinfo)-$(shell hostname)
 all:  out/$(CPU)-versions.txt
+check:
+	bats --verbose-run t/test_niimean.bats
 
 ## rust
 target/release/niimean: target/release/voxcor
@@ -17,7 +20,7 @@ niimean/niimean: niimean/main.go util/util.go
 ## benchmark
 out/$(CPU)-stats.csv: niimean/niimean target/release/niimean $(wildcard scripts/*) | out/ # tpl-MNI152NLin2009cAsym_res-02_T1w.nii.gz
 	hyperfine --warmup 1 -m $(NRUN)  --export-csv $@ \
-		"3dBrickStat -slow wf-mp2rage-7t_2017087.nii.gz"\
+		"3dBrickStat -slow -mean wf-mp2rage-7t_2017087.nii.gz"\
 		"MeasureMinMaxMean 3 wf-mp2rage-7t_2017087.nii.gz" \
 		"mris_calc wf-mp2rage-7t_2017087.nii.gz mean" \
 		"fslstats wf-mp2rage-7t_2017087.nii.gz -m"\
@@ -25,7 +28,7 @@ out/$(CPU)-stats.csv: niimean/niimean target/release/niimean $(wildcard scripts/
 	   scripts/niimean.m \
 		niimean/niimean \
 		scripts/niimean.py \
-		"julia scripts/niimean.jl"\
+		scripts/niimean.jl\
 		scripts/niimean.R \
 		"target/release/niimean"
 
