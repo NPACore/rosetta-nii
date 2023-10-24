@@ -8,6 +8,23 @@ Currently, only mean of nii.gz dataset.
 See hyperfine [`out/*stats.csv`](out/AMD_FX_tm__9590_Eight_Core_Processor-kt-stats.csv) as run in [`Makefile`](Makefile)
 out/
 
+### Intel Xeon server
+```
+'fslstats wf-mp2rage-7t_2017087.nii.gz -m' ran # fsl, c
+    1.50 ± 0.07 times faster than '3dBrickStat -slow wf-mp2rage-7t_2017087.nii.gz' # afni, c
+    1.53 ± 0.07 times faster than 'MeasureMinMaxMean 3 wf-mp2rage-7t_2017087.nii.gz' # ants, c++
+    2.72 ± 0.12 times faster than 'deno run --allow-read scripts/niimean.js'
+    4.30 ± 0.20 times faster than 'target/release/niimean' # rust
+    4.32 ± 0.18 times faster than 'julia scripts/niimean.jl'
+    4.84 ± 0.25 times faster than 'scripts/niimean.py'
+    5.93 ± 0.24 times faster than 'mris_calc wf-mp2rage-7t_2017087.nii.gz mean' # freesurfer, c++
+    6.01 ± 0.36 times faster than 'scripts/niimean.m'
+    7.27 ± 0.31 times faster than 'scripts/niimean.R'
+    8.52 ± 0.48 times faster than 'niimean/niimean' #go
+
+```
+
+
 ### Intel i7 laptop
 ```
 3dBrickStat -slow /home/foranw/mybrain/mybrain_2017-08_7t.nii.gz ran
@@ -31,18 +48,6 @@ fslstats wf-mp2rage-7t_2017087.nii.gz -m ran
     5.65 ± 0.05 times faster than niimean/niimean
     7.30 ± 0.10 times faster than scripts/niimean.R
 
-```
-
-### Intel Xeon server
-```
-  'fslstats wf-mp2rage-7t_2017087.nii.gz -m' ran
-    1.53 ± 0.05 times faster than '3dBrickStat -slow wf-mp2rage-7t_2017087.nii.gz'
-    2.69 ± 0.09 times faster than 'deno run --allow-read scripts/niimean.js'
-    4.31 ± 0.11 times faster than 'julia scripts/niimean.jl'
-    4.39 ± 0.29 times faster than 'target/release/niimean'
-    4.93 ± 0.20 times faster than 'scripts/niimean.py'
-    7.35 ± 0.24 times faster than 'scripts/niimean.R'
-    8.36 ± 0.28 times faster than 'niimean/niimean'
 ```
 
 ### Notes
@@ -97,9 +102,13 @@ To use newer versions on rhea, update the path to include the compile-from-recen
 
 ```
 export PATH="/opt/ni_tools/utils/go/bin:$PATH"
-export PATH="/opt/ni_tools/octave-8.3.0/bin:$PATH"
+
+# source dl and extracted to /opt/ni_tools/octave-8.3.0-src
+# ./configure --prefix=/opt/ni_tools/octave-8.3/ && make install
+export PATH="/opt/ni_tools/octave-8.3/bin:$PATH"
 ```
 
+NB. but use debian backport https://wiki.debian.org/SimpleBackportCreation
 ## TODO
 
 - [ ] get expert goland and rust advice/implementation (should be faster?)

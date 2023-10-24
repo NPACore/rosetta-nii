@@ -18,6 +18,8 @@ niimean/niimean: niimean/main.go util/util.go
 out/$(CPU)-stats.csv: niimean/niimean target/release/niimean $(wildcard scripts/*) | out/ # tpl-MNI152NLin2009cAsym_res-02_T1w.nii.gz
 	hyperfine --warmup 1 -m $(NRUN)  --export-csv $@ \
 		"3dBrickStat -slow wf-mp2rage-7t_2017087.nii.gz"\
+		"MeasureMinMaxMean 3 wf-mp2rage-7t_2017087.nii.gz" \
+		"mris_calc wf-mp2rage-7t_2017087.nii.gz mean" \
 		"fslstats wf-mp2rage-7t_2017087.nii.gz -m"\
 		"deno run --allow-read scripts/niimean.js" \
 	   scripts/niimean.m \
