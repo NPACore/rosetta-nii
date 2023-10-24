@@ -7,5 +7,5 @@
 %instead, using spm12
 % cd spm12/src && make PLATFORM=octave instal
 addpath('~/Downloads/spm12')
-x =  spm_vol('/home/foranw/mybrain/mybrain_2017-08_7t.nii.gz');
+x =  spm_vol('wf-mp2rage-7t_2017087.nii.gz');
 disp(mean(x.dat,'all'))
