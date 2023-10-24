@@ -77,6 +77,8 @@ Benchmarking uses [`hyperfine`](https://github.com/sharkdp/hyperfine).
 * c
   - `3dBrickstat` is from AFNI
   - `fslstats` is from fsl
+* rust
+  - `[rustup](https://rustup.rs/) update`
 * octave
   1. download spm12 and extract to `~/Downoads/spm12` [`scripts/niimean.m`](scripts/niimean.m) hardcodes addpath 
   1. compile `cd src/ && make PLATFORM=octave install`
@@ -85,6 +87,7 @@ Benchmarking uses [`hyperfine`](https://github.com/sharkdp/hyperfine).
 * R
   1. `install.packages('oro.nifti')`
 * deno
+  - `cargo install deno`
   - first run will pull in npm package `nifti-reader-js`
 
 ### Debain stable (12.0 "bookworm") in 2023
