@@ -1,3 +1,4 @@
+#!/usr/bin/env -S deno run --allow-read
 import nifti from 'npm:nifti-reader-js'
 // https://github.com/rii-mango/NIFTI-Reader-JS/blob/master/tests/canvas.html
 var data = await Deno.readFile("wf-mp2rage-7t_2017087.nii.gz");

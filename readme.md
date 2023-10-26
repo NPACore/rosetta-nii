@@ -116,8 +116,6 @@ NB. but use debian backport https://wiki.debian.org/SimpleBackportCreation
   - [ ] loop vs vector; expect python loop to be especially slow
   - [ ] parallel processing
 - [ ] preform within interpreter time benchmarking (remove startup costs)
-- [ ] add nifti to repo or Makefile. use that instead of "mybrain"
-- [ ] hyperfine per run and code to average. dont want to run full suit for change in single file
 - [ ] containerize benchmarks
 - [ ] other implementations
   - [ ] julia's APL implementation
