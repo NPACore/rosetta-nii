@@ -7,8 +7,7 @@ check:
 	bats --verbose-run t/test_niimean.bats
 
 ## rust
-target/release/niimean: target/release/voxcor
-target/release/voxcor: $(wildcard src/*rs)
+target/release/niimean target/release/voxcor: $(wildcard src/*rs)
 	cargo build --release
 
 ## go
