@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	util "voxcor/util"
+   "gonum.org/v1/gonum/stat"
 )
 
 func main() {
@@ -10,11 +11,13 @@ func main() {
 	//flag.Parse()
 	//img := util.Read_nifti(*roi_file)
    img := util.Read_nifti("wf-mp2rage-7t_2017087.nii.gz")
+   /*
 	sum := 0.0
 	for _, v := range img {
 		sum += v
 	}
-
 	n := float64(len(img))
 	fmt.Printf("mean: %.3f", sum/n)
+   */
+   fmt.Printf("%.3f",stat.Mean(img, nil))
 }
