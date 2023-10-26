@@ -4,5 +4,5 @@ Python 3.7.14 (default, Jun  9 2023, 11:01:04)
 [GCC 10.2.1 20210110]; np 1.21.6; nib 3.2.2
 GNU Octave, version 8.3.0
 R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
-go version go1.21.3 linux/amd64
+go version go1.19.8 linux/amd64
 rustc 1.73.0 (cc66ad468 2023-10-03)
