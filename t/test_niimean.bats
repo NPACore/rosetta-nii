@@ -1,4 +1,4 @@
-check_mean(){ [[ "$*" =~ 838.2 ]]; }
+check_mean(){ [[ "$*" =~ 838.20 ]]; }
 
 test_niimean_jl() { #@test
   run scripts/niimean.jl
