@@ -2,7 +2,7 @@
 NRUN := 100
 CPU := $(shell perl -lne 'print $$1=~s/[-()\s]/_/gr and exit if m/model.name.*: (.*)/' < /proc/cpuinfo)-$(shell hostname)
 BENCHCMD := hyperfine --warmup 1 -m $(NRUN) --export-csv
-all:  out/$(CPU)-versions.txt
+all:  out/$(CPU)/versions.txt
 check:
 	bats --verbose-run t/test_niimean.bats
 
@@ -49,12 +49,12 @@ out/$(CPU)/niimean/ants.csv:        | out/$(CPU)/niimean/
 
 # after benchmarking all separately, combine sorted on average run time
 # grab the first header, and then sort without any headers
-out/$(CPU)-stats.csv: $(NIIMEAN_SCRIPT_OUT) $(NIIMEAN_BIN_OUT) | out/
+out/$(CPU)/niimean-stats.csv: $(NIIMEAN_SCRIPT_OUT) $(NIIMEAN_BIN_OUT) | out/$(CPU)/
 	sed 1q $^ > $@
-	grep -v ,mean, $^ | sort -k2,2nr >> $@
+	grep -hv ,mean, $^ | sort -t, -k2,2n >> $@
 
 # new stats file? update versions
-out/$(CPU)-versions.txt: out/$(CPU)-stats.csv | out/
+out/$(CPU)/versions.txt: out/$(CPU)/niimean-stats.csv | out/$(CPU)/
 	./versions.bash > $@
 
 %/:
