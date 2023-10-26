@@ -25,7 +25,7 @@ out/
 ```
 
 
-### Intel i7 laptop
+### Intel i5 laptop
 ```
 3dBrickStat -slow /home/foranw/mybrain/mybrain_2017-08_7t.nii.gz ran
     1.68 ± 0.08 times faster than deno run --allow-read niimean.js

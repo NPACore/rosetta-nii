@@ -1,0 +1,7 @@
+deno 1.37.1 (release, x86_64-unknown-linux-gnu)
+julia version 1.9.3
+Python 3.11.5 (main, Sep  2 2023, 14:16:33) [GCC 13.2.1 20230801]; np 1.26.0; nib 5.1.0
+GNU Octave, version 8.3.0
+R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+go version go1.21.1 linux/amd64
+rustc 1.72.1 (d5c2e9c34 2023-09-13)
