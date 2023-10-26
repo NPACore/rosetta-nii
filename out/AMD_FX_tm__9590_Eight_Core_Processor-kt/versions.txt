@@ -3,3 +3,5 @@ julia version 1.9.3
 Python 3.11.5 (main, Sep  2 2023, 14:16:33) [GCC 13.2.1 20230801]; np 1.26.0; nib 5.1.0
 GNU Octave, version 8.3.0
 R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+go version go1.21.1 linux/amd64
+rustc 1.73.0 (cc66ad468 2023-10-03) (Arch Linux rust 1:1.73.0-1)
