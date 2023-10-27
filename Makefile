@@ -1,10 +1,15 @@
 .PHONY: all check
+
+## Setup
 NRUN := 100
 CPU := $(shell perl -lne 'print $$1=~s/[-()\s]/_/gr and exit if m/model.name.*: (.*)/' < /proc/cpuinfo)-$(shell hostname)
 BENCHCMD := hyperfine --warmup 1 -m $(NRUN) --export-csv
+NIIMEAN_BINS := niimean/niimean target/release/niimean
+NIIMEAN_SCRIPTS := $(wildcard scripts/niimean*)
+
 all:  out/$(CPU)/versions.txt
-check:
-	bats --verbose-run t/test_niimean.bats
+check: out/$(CPU)/checks.txt
+
 
 ## rust
 target/release/niimean target/release/voxcor: $(wildcard src/*rs)
@@ -17,8 +22,10 @@ voxcor: main.go util/util.go
 niimean/niimean: niimean/main.go util/util.go
 	cd $(@D) && go build
 
+## benchmarks
+
 # define output files for each file in scripts
-NIIMEAN_SCRIPT_OUT := $(patsubst scripts/%,out/$(CPU)/niimean/%.csv,$(wildcard scripts/niimean*)) 
+NIIMEAN_SCRIPT_OUT := $(patsubst scripts/%,out/$(CPU)/niimean/%.csv, $(NIIMEAN_SCRIPTS))
 
 # always include rust and go. and only fsl ants anfi and freesurfer if the system has them available
 NIIMEAN_BIN_OUT := $(patsubst %,out/$(CPU)/niimean/%.csv,rust go $(if $(shell command -v fslstats 2> /dev/null),fsl,) $(if $(shell command -v 3dBrickStat 2> /dev/null),afni,) $(if $(shell command -v MeasureMinMaxMean 2> /dev/null),ants,) $(if $(shell command -v mris_calc 2> /dev/null),freesurfer,))
@@ -45,6 +52,10 @@ out/$(CPU)/niimean/freesurfer.csv:  | out/$(CPU)/niimean/
 	$(BENCHCMD) $@ "mris_calc wf-mp2rage-7t_2017087.nii.gz mean"
 out/$(CPU)/niimean/ants.csv:        | out/$(CPU)/niimean/
 	$(BENCHCMD) $@ "MeasureMinMaxMean 3 wf-mp2rage-7t_2017087.nii.gz" \
+
+# confirm functions actually work
+out/$(CPU)/checks.txt: $(NIIMEAN_BINS) $(NIIMEAN_SCRIPTS)
+	bats --verbose-run t/test_niimean.bats |tee $@
 
 # after benchmarking all separately, combine sorted on average run time
 # grab the first header, and then sort without any headers
