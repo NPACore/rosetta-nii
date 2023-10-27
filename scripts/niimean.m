@@ -8,4 +8,4 @@
 % cd spm12/src && make PLATFORM=octave instal
 addpath('~/Downloads/spm12')
 x =  spm_vol('wf-mp2rage-7t_2017087.nii.gz');
-disp(mean(x.dat,'all'))
+fprintf('%.5f\n', mean(x.dat,'all'))
