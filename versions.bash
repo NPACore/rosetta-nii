@@ -5,3 +5,4 @@ octave --version|sed 1q
 R --version|sed 1q
 go version
 rustc --version
+grep flags /proc/cpuinfo | sort -u

@@ -1,0 +1,9 @@
+deno 1.37.2 (release, x86_64-unknown-linux-gnu)
+julia version 1.9.3
+Python 3.11.5 (main, Aug 29 2023, 15:31:31) [GCC 13.2.0]; np 1.24.2; nib 5.1.0
+GNU Octave, version 8.3.0
+R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+go version go1.21.1 linux/amd64
+rustc 1.73.0 (cc66ad468 2023-10-03)
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good nopl cpuid aperfmperf pni dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm sse4_1 xsave lahf_lm pti tpr_shadow flexpriority vpid dtherm vnmi
+vmx flags	: vnmi flexpriority tsc_offset vtpr vapic
