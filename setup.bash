@@ -20,3 +20,5 @@ cargo install deno
 #   go get github.com/viterin/vek
 # adding new rust depends
 #   cargo add ndarray
+
+# cpanm PDL or apt install perl-pdl
