@@ -30,11 +30,11 @@ test_niimean_js() { #@test
 }
 
 test_niimean_go() { #@test
-  run niimean/niimean
+  run scripts/niimean.go
   check_mean "$output"
 }
 
 test_niimean_rust() { #@test
-  run target/release/niimean
+  run scripts/niimean.rs
   check_mean "$output"
 }

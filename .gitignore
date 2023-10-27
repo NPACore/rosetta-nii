@@ -2,3 +2,5 @@
 voxcor
 niimean/niimean
 out/*/niimean/
+scripts/*.go
+scripts/*.rs
