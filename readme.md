@@ -3,6 +3,8 @@ Various implementations of neuroimaging computation tasks for benchmarking perfo
 
 Currently, only mean of nii.gz dataset.
 
+Also see https://benchmarksgame-team.pages.debian.net/benchmarksgame/
+
 
 ## Results
 See hyperfine [`out/*stats.csv`](out/AMD_FX_tm__9590_Eight_Core_Processor-kt-stats.csv) as run in [`Makefile`](Makefile)
