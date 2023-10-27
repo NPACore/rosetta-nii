@@ -3,7 +3,10 @@ package main
 import (
 	"fmt"
 	util "voxcor/util"
-   "gonum.org/v1/gonum/stat"
+   //"gonum.org/v1/gonum/stat"
+
+   //vek is a collection of SIMD accelerated vector functions for Go.
+   "github.com/viterin/vek"
 )
 
 func main() {
@@ -19,5 +22,10 @@ func main() {
 	n := float64(len(img))
 	fmt.Printf("mean: %.3f", sum/n)
    */
-   fmt.Printf("%.3f",stat.Mean(img, nil))
+
+   // same as loop
+   //fmt.Printf("%.3f",stat.Mean(img, nil))
+
+   // slower! on core duo
+   fmt.Printf("%.3f", vek.Mean(img))
 }
