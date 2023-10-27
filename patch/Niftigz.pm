@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 #
-#package PDL::IO::Nifti;
-package Niftigz;
+package PDL::IO::Nifti;
 
 
 use base PDL;
@@ -9,7 +8,7 @@ use PDL;
 use PDL::IO::FlexRaw;
 #use Getopt::Tabular;
 #use Exporter;
-use Data::Dumper;
+#use Data::Dumper;
 use 5.10.0;
 #@ISA = qw(Exporter);
 #@EXPORT = qw(write_nii read_nii get_field set_field write_hdr read_hdr %template_nifti_header);
@@ -229,73 +228,73 @@ sub read_hdr {
 	my $file=shift; # Ref to filehandle
 	binmode $file,':raw:';
 	my $header_to_dims;
-   my $n_to_dim = 40+8*2;
-   # we can't seek backwards if streaming from gzip
-   # so cache the first 42 -- just enough to get byte order from dim[0] (max 7)
-   my $use_cache = 1;
-   my $verbose = 0;
-   my $o;
-   if($use_cache) {
-      read $file, $header_to_dims, $n_to_dim;
-      $o=unpack 'x40 s', $header_to_dims;
-   } else {
-      seek $file,40,0;
-      read $file,$o,2;
-      $o=unpack 's', $o;
-      seek $file,0,0;
-   }
+	my $n_to_dim = 40+8*2;
+	# we can't seek backwards if streaming from gzip
+	# so cache the first 42 -- just enough to get byte order from dim[0] (max 7)
+	my $use_cache = 1;
+	my $verbose = 0;
+	my $o;
+	if($use_cache) {
+		read $file, $header_to_dims, $n_to_dim;
+		$o=unpack 'x40 s', $header_to_dims;
+	} else {
+		seek $file,40,0;
+		read $file,$o,2;
+		$o=unpack 's', $o;
+		seek $file,0,0;
+	}
 	die "No dimenison info '$o' in bytes 40-42" unless $o;
 	$byte_order='>' if ($o>8);
 	print "Dims: $o, byte order string: '$byte_order'\n" if $verbose;
 	#my %nifti=%template_nifti_header;
 	#read $file,$str,352;
 	my $pos=0;
-   my $xpos='';
+	my $xpos='';
 
-   # overwrote unless use_cache. w/cache extract headers $item @ 'x$pos'
-   my $item = $header_to_dims;
+ 	# overwrote unless use_cache. w/cache extract headers $item @ 'x$pos'
+ 	my $item = $header_to_dims;
 
 	for my $field (@_farray) {
 		#my $field=$_farray[$i];
 		my $c=int($$self{$field}->{count}||1)*($$self{$field}->{length}||1); # field counter in pack string
-      my $read_size = $sizes{$$self{$field}->{type}}*$c;
+	my $read_size = $sizes{$$self{$field}->{type}}*$c;
 
-      # reuse what we've already read
-      # unpack w/eg. 'x3' is like seek $fh, 3, 0
-      if($pos < $n_to_dim and $use_cache) {
-         $xpos="x$pos ";
-      } else {
-         $xpos="";
-         read $file, $item, $read_size;
-      }
+	# reuse what we've already read
+	# unpack w/eg. 'x3' is like seek $fh, 3, 0
+	if($pos < $n_to_dim and $use_cache) {
+		$xpos="x$pos ";
+	} else {
+		$xpos="";
+		read $file, $item, $read_size;
+	}
 		$pos+=$read_size; # 20231026. moved from end of loop. commented print statments will be weird
 
 		#say ($$self{$field}->{type});
 		next if ($$self{$field}->{type} eq '1'); # 20231026: no type is ever 1?
 
-      # include byte_order only when needed
-      my $tmpl = ($$self{$field}->{type} =~ m/[sSlLqQfF]/)?
-                    $xpos.$$self{$field}->{type}.$byte_order.$c:
-                    $xpos.$$self{$field}->{type}.$c;
-      
+	# include byte_order only when needed
+	my $tmpl = ($$self{$field}->{type} =~ m/[sSlLqQfF]/)?
+		         $xpos.$$self{$field}->{type}.$byte_order.$c:
+		         $xpos.$$self{$field}->{type}.$c;
+	
 		#say "$field ,".$$self{$field}->{type};# if ($$self{$field}->{type} eq '1');
 		if ($$self{$field}->{count}>1) {
 			$self->set_field($field,[unpack ($tmpl,$item)]) ;
 		} else {
 			$self->set_field($field,unpack ($tmpl,$item)) ;
 		}
-      print "$field ($pos; $tmpl):", $self->get_field($field),"\n" if $verbose;
-      # 20231026. previously updated $pos here. but want to account for potential next if type==1
+	   print "$field ($pos; $tmpl):", $self->get_field($field),"\n" if $verbose;
+	   # 20231026. previously updated $pos here. but want to account for potential next if type==1
 		
 	}
 
-   #if($verbose){
+	#if($verbose){
 	#  say "final pos: $pos";
 	#  say "Dim, ",@{$self->get_field('dim')};
 	#  say "magic, ",$self->get_field('magic');
 	#  say "offset, ",$self->get_field('vox_offset');
-   #  say Dumper $self;
-   #}
+	#  say Dumper $self;
+	#}
 	#return \%nifti;
 }
 
@@ -375,7 +374,7 @@ sub read_nii {
 	fileno $f && ($file=$f) || ($file=open_nii_or_niigz($f));
 	binmode $file,':raw:';
 	$self->read_hdr ($file); # fill header
-   #seek ($file, min (pdl($self->get_field('vox_offset')),352),0);
+	#seek ($file, min (pdl($self->get_field('vox_offset')),352),0);
 	my $dims=$self->get_field('dim');
 	#say "$dims, @$dims";
 	my $ndims=shift @{$dims};
