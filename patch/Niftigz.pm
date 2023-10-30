@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 #
-package PDL::IO::Nifti;
+#package PDL::IO::Nifti;
+package Niftigz;
 
 
 use base PDL;
