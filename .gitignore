@@ -5,3 +5,5 @@ out/*/niimean/
 scripts/*.go
 scripts/*.rs
 t/*nii.gz
+.RData
+.Rhistory

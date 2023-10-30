@@ -11,19 +11,36 @@ See hyperfine [`out/*stats.csv`](out/AMD_FX_tm__9590_Eight_Core_Processor-kt-sta
 out/
 
 ### Intel Xeon server
-```
-'fslstats wf-mp2rage-7t_2017087.nii.gz -m' ran # fsl, c
-    1.50 ± 0.07 times faster than '3dBrickStat -slow wf-mp2rage-7t_2017087.nii.gz' # afni, c
-    1.53 ± 0.07 times faster than 'MeasureMinMaxMean 3 wf-mp2rage-7t_2017087.nii.gz' # ants, c++
-    2.72 ± 0.12 times faster than 'deno run --allow-read scripts/niimean.js'
-    4.30 ± 0.20 times faster than 'target/release/niimean' # rust
-    4.32 ± 0.18 times faster than 'julia scripts/niimean.jl'
-    4.84 ± 0.25 times faster than 'scripts/niimean.py'
-    5.93 ± 0.24 times faster than 'mris_calc wf-mp2rage-7t_2017087.nii.gz mean' # freesurfer, c++
-    6.01 ± 0.36 times faster than 'scripts/niimean.m'
-    7.27 ± 0.31 times faster than 'scripts/niimean.R'
-    8.52 ± 0.48 times faster than 'niimean/niimean' #go
 
+simple mean of 3D image (`wf-mp2rage-7t_2017087.nii.gz`)
+<!-- 
+cut -d, -f1-2  out/Intel_R__Xeon_R__CPU_E5_2699_v3_@_2.30GHz-rhea.wpic.upmc.edu/niimean-stats.csv|sed 's/ .*,/,/;s:scripts/::'|column -ts, -->
+```
+command            mean
+fslstats           0.35308495769
+niimean.rs         0.4606315605666667
+3dBrickStat        0.51865660084
+MeasureMinMaxMean  0.5215459278600002
+niimean.js         0.9318040066400002
+niimean.pl         1.0452616458333333
+niimean.jl         1.6311526155799996
+niimean.py         1.7192550077300002
+mris_calc          2.0955282514799993
+niimean.m          2.103778385753333
+niimean.R          2.6206949904699997
+niimean.go         2.829263984946666
+```
+
+vs manual loop `voxcor`
+<!-- cut -d, -f1-2  out/Intel_R__Xeon_R__CPU_E5_2699_v3_@_2.30GHz-rhea.wpic.upmc.edu/voxcor-stats.csv|sed 's/ .*,/,/'|column -ts, -->
+```
+command    mean
+voxcor.rs  0.10011695514074072
+voxcor.go  0.2599205325600001
+voxcor.py  1.38515054508
+voxcor.m   1.6904066477000002
+voxcor.R   2.05836244986
+voxcor.jl  2.7809278878133337
 ```
 
 
