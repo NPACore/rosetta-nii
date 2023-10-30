@@ -5,19 +5,22 @@ NRUN := 15
 CPU := $(shell perl -lne 'print $$1=~s/[-()\s]/_/gr and exit if m/model.name.*: (.*)/' < /proc/cpuinfo)-$(shell hostname)
 BENCHCMD := hyperfine --warmup 1 -m $(NRUN) --export-csv
 NIIMEAN_SCRIPTS := $(wildcard scripts/niimean*) scripts/niimean.rs scripts/niimean.go
+VOXCOR_SCRIPTS := $(filter-out scripts/voxcor.pl,$(wildcard scripts/voxcor*)) scripts/voxcor.rs scripts/voxcor.go
 
 all:  out/$(CPU)/versions.txt
 check: out/$(CPU)/checks.txt
 
 
 ## rust
-scripts/niimean.rs target/release/voxcor: $(wildcard src/*rs)
+scripts/niimean.rs scripts/voxcor.rs: $(wildcard src/*rs)
 	cargo build --release
 	mv target/release/niimean scripts/niimean.rs
+	mv target/release/voxcor scripts/voxcor.rs
 
 ## go
-voxcor: main.go util/util.go
+scripts/voxcor.go: main.go util/util.go
 	go build
+	mv voxcor $@
 
 scripts/niimean.go: niimean/main.go util/util.go
 	cd niimean && go build
@@ -27,10 +30,14 @@ scripts/niimean.go: niimean/main.go util/util.go
 
 # define output files for each file in scripts
 NIIMEAN_SCRIPT_OUT := $(patsubst scripts/%,out/$(CPU)/niimean/%.csv,$(NIIMEAN_SCRIPTS))
+VOXCOR_SCRIPT_OUT := $(patsubst scripts/%,out/$(CPU)/voxcor/%.csv,$(VOXCOR_SCRIPTS))
 
 # always include rust and go. and only fsl ants anfi and freesurfer if the system has them available
 NIIMEAN_BIN_OUT := $(patsubst %,out/$(CPU)/niimean/%.csv,$(if $(shell command -v fslstats 2> /dev/null),fsl,) $(if $(shell command -v 3dBrickStat 2> /dev/null),afni,) $(if $(shell command -v MeasureMinMaxMean 2> /dev/null),ants,) $(if $(shell command -v mris_calc 2> /dev/null),freesurfer,))
 
+# voxcor
+out/$(CPU)/voxcor/%.csv: scripts/% | out/$(CPU)/voxcor/
+	$(BENCHCMD) $@ "$^ -r t/syn_roi.nii.gz -x t/syn1.nii.gz -y t/syn2.nii.gz"
 
 
 # generic
@@ -56,6 +63,10 @@ out/$(CPU)/checks.txt: $(NIIMEAN_SCRIPTS)
 # after benchmarking all separately, combine sorted on average run time
 # grab the first header, and then sort without any headers
 out/$(CPU)/niimean-stats.csv: $(NIIMEAN_SCRIPT_OUT) $(NIIMEAN_BIN_OUT) | out/$(CPU)/
+	sed 1q $^ > $@
+	grep -hv ,mean, $^ | sort -t, -k2,2n >> $@
+
+out/$(CPU)/voxcor-stats.csv: $(VOXCOR_SCRIPT_OUT)| out/$(CPU)/
 	sed 1q $^ > $@
 	grep -hv ,mean, $^ | sort -t, -k2,2n >> $@
 

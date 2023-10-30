@@ -12,7 +12,10 @@ for ri in rois:
         continue
 
     roi_idx = np.where(roi == ri)
-    r = np.correlate(x[roi_idx], y[roi_idx])
-    mx = np.mean(x[roi_idx])
-    my = np.mean(y[roi_idx])
-    print(f"{ri}\t{len(roi_idx)}\t{mx}\t{my}\t{r}")
+    xs = x[roi_idx] #.flatten()
+    ys = y[roi_idx] #.flatten()
+    n = len(xs)
+    mx = np.mean(xs)
+    my = np.mean(ys)
+    cor = np.corrcoef(xs, ys)[0,1]
+    print(f"{ri}\t{n}\t{mx}\t{my}\t{cor}")

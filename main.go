@@ -68,6 +68,6 @@ func main() {
 		mean_x := stat.Mean(v.x, nil)
 		mean_y := stat.Mean(v.y, nil)
 		r := stat.Correlation(v.x, v.y, nil)
-		fmt.Printf("%.0f\t%d\t%.2f\t%.2f\t%.2f\n", k, len(v.x), mean_x, mean_y, r)
+		fmt.Printf("%.0f\t%d\t%.2f\t%.2f\t%.5f\n", k, len(v.x), mean_x, mean_y, r)
 	}
 }

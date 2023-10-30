@@ -8,16 +8,20 @@ use lib dirname (__FILE__) . '/../patch';
 
 use PDL;
 use Niftigz; #use PDL::IO::Nifti;
+use PDL::Stats::Basic; # corr
+
 my $r = Niftigz->new()->read_nii("t/syn_roi.nii.gz");
 my $x = Niftigz->new()->read_nii("t/syn1.nii.gz");
 my $y = Niftigz->new()->read_nii("t/syn2.nii.gz");
-my @rois = sort grep {$_!=0} uniq($r);
+my @rois = sort grep {$_!=0} list uniq($r);
 for my $roi (@rois) {
    my $i = $r==$roi;
-   my $xs = $x[$i];
-   my $ys = $y[$i];
-   my $xm = mean($xs);
-   my $ym = mean($ys);
-   my $r = cor($xs,$ys);
+   my $xs = $x->where($i)->sever;
+   my $ys = $y->where($i)->sever;
+   my $n = $xs->nelem();
+   my $xm = $xs->sum()/$n;
+   my $ym = $ys->sum()/$n;
+   my $cor = $n>3?$xs->corr($ys):"NA";
+   print join("\t",$roi,$n, $xm,$ym,$cor),"\n";
 }
 

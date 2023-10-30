@@ -8,4 +8,4 @@ gen_info <- function(roi) {
    yr <- y[r@.Data==roi]
    data.frame(roi=roi,nx=length(xr),ny=length(yr), mx=mean(xr), my=mean(yr), r=cor(xr,yr))
 }
-lapply(rois, gen_info) |> data.table::rbindlist()
+lapply(rois, gen_info) |> data.table::rbindlist() |>write.table(row.names=F,quote=F,sep="\t")
