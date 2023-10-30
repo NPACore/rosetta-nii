@@ -37,7 +37,7 @@ func read_nifti(input string) []float64 {
 }
 
 func main() {
-	roi_file := flag.String("roi", "", "path to roi atlas/mask nifti image")
+	roi_file := flag.String("r", "", "path to roi atlas/mask nifti image")
 	x_file := flag.String("x", "", "path to first input image")
 	y_file := flag.String("y", "", "path to second input image")
 	flag.Parse()
