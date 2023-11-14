@@ -1,14 +1,25 @@
 # Rosetta Nii
 Various implementations of neuroimaging computation tasks for benchmarking performance and code demonstration.
 
-Currently, only mean of nii.gz dataset.
+Currently, only mean and voxel-pairwise correlation of .nii.gz datasets.
 
 Also see https://benchmarksgame-team.pages.debian.net/benchmarksgame/
 
+## Notes
+
+ * Rust and Julia have [Int16 overruns](https://github.com/JuliaNeuroscience/NIfTI.jl/issues/70) that were not obvious. Seen when summing over large nifti image to get mean. Scaling and un-scaling is a fast workaround.
+ * Missing implementation
+   * I couldn't find a elixir/erlang, php, or ruby nifti libraries
+   * common lisps also does not have a ready library, but implementation with `lisp-binary` looks feasible. and using  `april` for APL style math is an interesting prospect.
+   * [`patch/`](patch/) adds gzip support to `PDL::IO::Nifti`. **BUG**: does not correctly deal with header offset
+   * Java would be interesting but getting a nifti library w/o installing a full IDE was not immediately obvious.
 
 ## Results
-See hyperfine [`out/*stats.csv`](out/AMD_FX_tm__9590_Eight_Core_Processor-kt-stats.csv) as run in [`Makefile`](Makefile)
-out/
+
+![Implementations rank within processor group](out/rank_plot.png)
+
+See hyperfine [`out/*stats.csv`](out/AMD_FX_tm__9590_Eight_Core_Processor-kt-stats.csv) as run by [`Makefile`](Makefile)
+
 
 ### Intel Xeon server
 
