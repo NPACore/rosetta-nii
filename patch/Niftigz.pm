@@ -375,7 +375,6 @@ sub read_nii {
 	fileno $f && ($file=$f) || ($file=open_nii_or_niigz($f));
 	binmode $file,':raw:';
 	$self->read_hdr ($file); # fill header
-	#seek ($file, min (pdl($self->get_field('vox_offset')),352),0);
 	my $dims=$self->get_field('dim');
 	#say "$dims, @$dims";
 	my $ndims=shift @{$dims};
@@ -385,7 +384,10 @@ sub read_nii {
 	#say "$type,$i,$j,$k,$l";
 	while (!$$dims[-1]) {pop @$dims;} # Remove trailing 0s to avoid 0-length dim in piddle
 	unshift @$dims,$i if ($i>1); # First dim is now complex or RGB if required.
-	
+
+        my $img_start = min(pdl($self->get_field('vox_offset')),352);
+        #print("seeking to image data @ $img_start\n");
+	seek ($file, $img_start,0);
 	unless ($j) { # type is native, no conversion necessary
 		#say "Reading data now $type, $ndims, @$dims";
 		if ($byte_order) {
