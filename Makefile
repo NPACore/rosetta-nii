@@ -2,7 +2,7 @@
 
 ## Setup
 NRUN := 15
-CPU := $(shell perl -lne 'print $$1=~s/[-()\s]/_/gr and exit if m/model.name.*: (.*)/' < /proc/cpuinfo)-$(shell hostname)
+CPU := $(shell ./cpu-info.pl)
 BENCHCMD := hyperfine --warmup 1 -m $(NRUN) --export-csv
 NIIMEAN_SCRIPTS := $(wildcard scripts/niimean*) scripts/niimean.rs scripts/niimean.go
 VOXCOR_SCRIPTS := $(filter-out scripts/voxcor.pl,$(wildcard scripts/voxcor*)) scripts/voxcor.rs scripts/voxcor.go
@@ -14,8 +14,8 @@ check: out/$(CPU)/checks.txt
 ## rust
 scripts/niimean.rs scripts/voxcor.rs: $(wildcard src/*rs)
 	cargo build --release
-	mv target/release/niimean scripts/niimean.rs
-	mv target/release/voxcor scripts/voxcor.rs
+	cp -u target/release/niimean scripts/niimean.rs
+	cp -u target/release/voxcor scripts/voxcor.rs
 
 ## go
 scripts/voxcor.go: main.go util/util.go
@@ -71,7 +71,7 @@ out/$(CPU)/voxcor-stats.csv: $(VOXCOR_SCRIPT_OUT)| out/$(CPU)/
 	grep -hv ,mean, $^ | sort -t, -k2,2n >> $@
 
 # new stats file? update versions
-out/$(CPU)/versions.txt: out/$(CPU)/niimean-stats.csv | out/$(CPU)/
+out/$(CPU)/versions.txt: out/$(CPU)/niimean-stats.csv out/$(CPU)/voxcor/%.csv | out/$(CPU)/
 	./versions.bash > $@
 
 %/:
