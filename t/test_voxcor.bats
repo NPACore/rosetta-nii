@@ -41,3 +41,8 @@ test_voxcor.m() { #@test
   run scripts/voxcor.m "${ARGS[@]}"
   voxcor_cmp_rust "${output}"
 }
+
+test_voxcor.pl() { #@test
+  run scripts/voxcor.pl "${ARGS[@]}"
+  voxcor_cmp_rust "${output}"
+}

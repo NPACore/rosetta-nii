@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use std::collections::hash_map::Entry;
 use ndarray::ArrayView; //{ArrayBase};
 // use fast_stats::fstats_f64; //streaming mean
-use ndarray_stats::CorrelationExt;
+//use ndarray_stats::CorrelationExt;
 
 use clap::Parser;
 

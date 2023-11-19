@@ -5,7 +5,7 @@ NRUN := 15
 CPU := $(shell ./cpu-info.pl)
 BENCHCMD := hyperfine --warmup 1 -m $(NRUN) --export-csv
 NIIMEAN_SCRIPTS := $(wildcard scripts/niimean*) scripts/niimean.rs scripts/niimean.go
-VOXCOR_SCRIPTS := $(filter-out scripts/voxcor.pl,$(wildcard scripts/voxcor*)) scripts/voxcor.rs scripts/voxcor.go
+VOXCOR_SCRIPTS := $(wildcard scripts/voxcor*)
 
 all:  out/$(CPU)/versions.txt
 check: out/$(CPU)/checks.txt
@@ -71,7 +71,7 @@ out/$(CPU)/voxcor-stats.csv: $(VOXCOR_SCRIPT_OUT)| out/$(CPU)/
 	grep -hv ,mean, $^ | sort -t, -k2,2n >> $@
 
 # new stats file? update versions
-out/$(CPU)/versions.txt: out/$(CPU)/niimean-stats.csv out/$(CPU)/voxcor/%.csv | out/$(CPU)/
+out/$(CPU)/versions.txt: out/$(CPU)/niimean-stats.csv out/$(CPU)/voxcor-stats.csv | out/$(CPU)/
 	./versions.bash > $@
 
 %/:
