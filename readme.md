@@ -1,14 +1,18 @@
 # Rosetta Nii
-Various implementations of neuroimaging computation tasks for benchmarking performance and code demonstration.
+Implementations of neuroimaging computation tasks for benchmarking performance and code demonstration across programming languages.
 
-Currently, only mean of nii.gz dataset.
+Currently implementing
+ * `niimean` -- mean of nii.gz dataset
+ * `voxcor` -- correlation within each ROI between two 3D images.
 
-Also see https://benchmarksgame-team.pages.debian.net/benchmarksgame/
+Also see
+ * https://benchmarksgame-team.pages.debian.net/benchmarksgame/  -- run time benchmarks across many languages and tasks
+ * https://julialang.org/benchmarks/  -- run times for science specific tasks and environments
+ * https://rosettacode.org/ -- programming chrestomathy: same task in many programming languages
 
 
 ## Results
-See hyperfine [`out/*stats.csv`](out/AMD_FX_tm__9590_Eight_Core_Processor-kt-stats.csv) as run in [`Makefile`](Makefile)
-out/
+See hyperfine [`out/${cpu}/${implementation}-stats.csv`](out/Intel_R__Xeon_R__CPU_E5_2699_v3_@_2.30GHz-rhea.wpic.upmc.edu/niimean-stats.csv). Collected by [`Makefile`](Makefile) across files in [`scripts/`](scripts/).
 
 ### Intel Xeon server
 
@@ -16,7 +20,7 @@ simple mean of 3D image (`wf-mp2rage-7t_2017087.nii.gz`)
 <!-- 
 cut -d, -f1-2  out/Intel_R__Xeon_R__CPU_E5_2699_v3_@_2.30GHz-rhea.wpic.upmc.edu/niimean-stats.csv|sed 's/ .*,/,/;s:scripts/::'|column -ts, -->
 ```
-command            mean
+command            mean (seconds)
 fslstats           0.35308495769
 niimean.rs         0.4606315605666667
 3dBrickStat        0.51865660084
@@ -70,9 +74,9 @@ fslstats wf-mp2rage-7t_2017087.nii.gz -m ran
 ```
 
 ### Notes
-For a simple mean calc, javascript and octave are faster than compile go and rust!
+For a simple mean calc, javascript is fast and go is slow!
 
-These times are more a measure of an interpreter/VM's startup time. They also demonstrate how much effort the community/library authors have put into optimzing (likely w/ compiled `c` code) hot paths (spm12 in octave, numpy in python).
+Especially for julia and R, the interpreter/VM's startup time. They also demonstrate how much effort the community/library authors have put into optimzing (likely w/ compiled `c` code, SIMD optimizations) hot paths (spm12 in octave, numpy in python, pdl in perl).
 
 The rust implementation should be built with `--release`, debug version performance is 10x worse!
 
