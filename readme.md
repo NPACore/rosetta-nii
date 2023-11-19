@@ -10,9 +10,21 @@ Also see
  * https://julialang.org/benchmarks/  -- run times for science specific tasks and environments
  * https://rosettacode.org/ -- programming chrestomathy: same task in many programming languages
 
+## Notes
+
+ * Rust and Julia have [Int16 overruns](https://github.com/JuliaNeuroscience/NIfTI.jl/issues/70) that were not obvious. Seen when summing over large nifti image to get mean. Scaling and un-scaling is a fast workaround.
+ * Missing implementation
+   * I couldn't find a elixir/erlang, php, or ruby nifti libraries
+   * common lisps also does not have a ready library, but implementation with `lisp-binary` looks feasible. and using  `april` for APL style math is an interesting prospect.
+   * [`patch/`](patch/) adds gzip support to `PDL::IO::Nifti`. **BUG**: does not correctly deal with header offset
+   * Java would be interesting but getting a nifti library w/o installing a full IDE was not immediately obvious.
 
 ## Results
-See hyperfine [`out/${cpu}/${implementation}-stats.csv`](out/Intel_R__Xeon_R__CPU_E5_2699_v3_@_2.30GHz-rhea.wpic.upmc.edu/niimean-stats.csv). Collected by [`Makefile`](Makefile) across files in [`scripts/`](scripts/).
+
+![Implementations rank within processor group](out/rank_plot.png)
+
+See hyperfine [`out/*stats.csv`](out/AMD_FX_tm__9590_Eight_Core_Processor-kt-stats.csv).
+ Collected by [`Makefile`](Makefile) across files in [`scripts/`](scripts/).
 
 ### Intel Xeon server
 
