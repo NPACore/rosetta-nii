@@ -10,13 +10,14 @@ Also see
  * https://julialang.org/benchmarks/  -- run times for science specific tasks and environments
  * https://rosettacode.org/ -- programming chrestomathy: same task in many programming languages
 
-## Notes
+## Implementation Notes
 
  * Rust and Julia have [Int16 overruns](https://github.com/JuliaNeuroscience/NIfTI.jl/issues/70) that were not obvious. Seen when summing over large nifti image to get mean. Scaling and un-scaling is a fast workaround.
+ * Runtime startups are especially slow for R and julia (and matlab). See [`within-env/`](within-env).
  * Missing implementation
    * I couldn't find a elixir/erlang, php, or ruby nifti libraries
    * common lisps also does not have a ready library, but implementation with `lisp-binary` looks feasible. and using  `april` for APL style math is an interesting prospect.
-   * [`patch/`](patch/) adds gzip support to `PDL::IO::Nifti`. **BUG**: does not correctly deal with header offset
+   * [`patch/`](patch/) adds gzip support to `PDL::IO::Nifti`.
    * Java would be interesting but getting a nifti library w/o installing a full IDE was not immediately obvious.
 
 ## Results
@@ -60,47 +61,21 @@ voxcor.jl  2.7809278878133337
 ```
 
 
-### Intel i5 laptop
-```
-3dBrickStat -slow /home/foranw/mybrain/mybrain_2017-08_7t.nii.gz ran
-    1.68 ± 0.08 times faster than deno run --allow-read niimean.js
-    1.70 ± 0.07 times faster than ./niimean.m
-    1.87 ± 0.09 times faster than niimean/niimean
-    2.24 ± 0.26 times faster than ./niimean.py
-    2.43 ± 0.07 times faster than julia niimean.jl
-    4.44 ± 0.12 times faster than ./niimean.R
-```
 
-### AMD desktop
-```
-fslstats wf-mp2rage-7t_2017087.nii.gz -m ran
-    1.39 ± 0.01 times faster than 3dBrickStat -slow wf-mp2rage-7t_2017087.nii.gz
-    2.93 ± 0.04 times faster than scripts/niimean.m
-    2.96 ± 0.05 times faster than deno run --allow-read scripts/niimean.js
-    3.75 ± 0.04 times faster than scripts/niimean.py
-    4.13 ± 0.06 times faster than julia scripts/niimean.jl
-    5.27 ± 0.07 times faster than target/release/niimean
-    5.65 ± 0.05 times faster than niimean/niimean
-    7.30 ± 0.10 times faster than scripts/niimean.R
-
-```
-
-### Notes
+### Performance Notes
 For a simple mean calc, javascript is fast and go is slow!
 
-Especially for julia and R, the interpreter/VM's startup time. They also demonstrate how much effort the community/library authors have put into optimzing (likely w/ compiled `c` code, SIMD optimizations) hot paths (spm12 in octave, numpy in python, pdl in perl).
+Especially for julia and R, the interpreter/VM's startup time. They also demonstrate how much effort the community/library authors have put into optimizing (likely w/ compiled `c` code, SIMD optimizations) hot paths (spm12 in octave, numpy in python, pdl in perl).
 
-The rust implementation should be built with `--release`, debug version performance is 10x worse!
+* The rust implementation should be built with `--release`, debug version performance is 10x worse!
+* Julia's interpreter (1.9.3) startup time is reasonable! It's overall time is on par with python (numpy, not native python).
+* SIMD "vectorized" operations in python (via numpy) are fast!
+* R's slow to start.
+* Javascript is painful to write. Both it and the golang version organize the nifti matrix data as a 1D vector.
+* Processor makes a difference in the shootout.
 
-Julia's interpreter (1.9.3) startup time is reasonable! It's overall time is on par with python (numpy, not native python).
-SIMD "vectorized" operations in python (via numpy) are fast!
-
-R's slow to start.
-
-Javascript is painful to write. Both it and the golang version organize the nifti matrix data as a 1D vector.
-
-Processor makes a differnce in the shootout.
-
+### Within environment 
+Cold startup measures are useful for utilities but not representative of interactive long-running work within an interpreter. In those cases the one time start-up cost is irrelevant. [`within-env/`](within-env) benchmarks the same tasks but with the environment already loaded.
 
 ## Run
 
@@ -150,7 +125,6 @@ NB. but use debian backport https://wiki.debian.org/SimpleBackportCreation
 - [ ] implement various styles (and more complex calculations)
   - [ ] loop vs vector; expect python loop to be especially slow
   - [ ] parallel processing
-- [ ] preform within interpreter time benchmarking (remove startup costs)
 - [ ] containerize benchmarks
 - [ ] other implementations
   - [ ] julia's APL implementation
