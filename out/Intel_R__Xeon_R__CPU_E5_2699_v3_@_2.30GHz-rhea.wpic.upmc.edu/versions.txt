@@ -1,7 +1,6 @@
 deno 1.37.2 (release, x86_64-unknown-linux-gnu)
 julia version 1.9.0
-Python 3.7.14 (default, Jun  9 2023, 11:01:04) 
-[GCC 10.2.1 20210110]; np 1.21.6; nib 3.2.2
+Python 3.11.2 (main, Mar 13 2023, 12:18:29) [GCC 12.2.0]; np 1.26.0; nib 5.0.0
 GNU Octave, version 8.3.0
 R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
 go version go1.21.3 linux/amd64
