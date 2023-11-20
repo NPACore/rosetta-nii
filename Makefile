@@ -7,9 +7,11 @@ BENCHCMD := hyperfine --warmup 1 -m $(NRUN) --export-csv
 NIIMEAN_SCRIPTS := $(wildcard scripts/niimean*) scripts/niimean.rs scripts/niimean.go
 VOXCOR_SCRIPTS := $(wildcard scripts/voxcor*)
 
-all:  out/$(CPU)/versions.txt
+all:  out/rank_plot.png
 check: out/$(CPU)/checks.txt
 
+out/rank_plot.png: out/$(CPU)/versions.txt
+	Rscript plot.R
 
 ## rust
 scripts/niimean.rs scripts/voxcor.rs: $(wildcard src/*rs)
@@ -57,8 +59,14 @@ out/$(CPU)/niimean/ants.csv:        | out/$(CPU)/niimean/
 	$(BENCHCMD) $@ "MeasureMinMaxMean 3 wf-mp2rage-7t_2017087.nii.gz" \
 
 # confirm functions actually work
-out/$(CPU)/checks.txt: $(NIIMEAN_SCRIPTS)
+out/$(CPU)/checks.txt: out/$(CPU)/check-niimean.txt out/$(CPU)/check-voxcor.txt
+	cat $^ > $@
+
+out/$(CPU)/check-niimean.txt: $(NIIMEAN_SCRIPTS)
 	bats --verbose-run t/test_niimean.bats |tee $@
+
+out/$(CPU)/check-voxcor.txt: $(VOXCOR_SCRIPTS)
+	bats --verbose-run t/test_voxcor.bats |tee $@
 
 # after benchmarking all separately, combine sorted on average run time
 # grab the first header, and then sort without any headers
