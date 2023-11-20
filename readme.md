@@ -12,7 +12,7 @@ Also see
 
 ## Implementation Notes
 
- * Rust and Julia have [Int16 overruns](https://github.com/JuliaNeuroscience/NIfTI.jl/issues/70) that were not obvious. Seen when summing over large nifti image to get mean. Scaling and un-scaling is a fast workaround.
+ * Rust, Julia, and Perl have [Int16 overruns](https://github.com/JuliaNeuroscience/NIfTI.jl/issues/70) that were not obvious. The issue is observed reading in an int16 nii.gz and summing over the large image (to calculate mean). Scaling and un-scaling is a fast workaround for Julia that does not work in perl. Using Int16 is faster than double but is inaccurate (unless rewritten to calculate a running mean).
  * Runtime startups are especially slow for R and julia (and matlab). See [`within-env/`](within-env).
  * Missing implementation
    * I couldn't find a elixir/erlang, php, or ruby nifti libraries

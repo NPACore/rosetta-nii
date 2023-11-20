@@ -38,3 +38,9 @@ test_niimean_rust() { #@test
   run scripts/niimean.rs
   check_mean "$output"
 }
+
+test_niimean_pl() { #@test
+  perl -MPDL -e 1 || skip
+  run scripts/niimean.pl
+  check_mean "$output"
+}
