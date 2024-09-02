@@ -43,6 +43,7 @@ test_voxcor.m() { #@test
 }
 
 test_voxcor.pl() { #@test
+  perl -MPDL -e 1 || skip
   run scripts/voxcor.pl "${ARGS[@]}"
   voxcor_cmp_rust "${output}"
 }
