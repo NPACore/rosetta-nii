@@ -44,3 +44,9 @@ test_niimean_pl() { #@test
   run scripts/niimean.pl
   check_mean "$output"
 }
+
+test_niimean_java() { #@test
+  test -r build/libs/rosetta-nii.jar || skip
+  run java -jar build/libs/rosetta-nii.jar
+  check_mean "$output"
+}

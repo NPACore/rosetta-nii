@@ -30,6 +30,7 @@ scripts/niimean.go: niimean/main.go util/util.go
 
 ## java
 scripts/niimean.java: build/libs/rosetta-nii.jar
+	# this is a phony target
 
 build/libs/rosetta-nii.jar: src/main/java/niimean/NiftiMean.java
 	gradle build
@@ -52,9 +53,9 @@ out/$(CPU)/voxcor/%.csv: scripts/% | out/$(CPU)/voxcor/
 out/$(CPU)/niimean/%.csv: scripts/% | out/$(CPU)/niimean/
 	$(BENCHCMD) $@ $^
 
-# java specific (avoid sh for overhead; todo: compile with GraalVM?)
+# java specific (avoid sh overhead; todo: compile with GraalVM?)
 out/$(CPU)/niimean/java.csv: build/libs/rosetta-nii.jar | out/$(CPU)/niimean/
-	$(BENCHCMD) $@ 'java -cp $^ niimean.NiftiMean'
+	$(BENCHCMD) $@ 'java -jar $^'
 
 # these can probably go into sh scripts.
 #   will that add any overhead?

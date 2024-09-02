@@ -1,8 +1,12 @@
-apply plugin: 'java'
-apply plugin: 'application'
+plugins {
+  id 'java'
+  id 'application'
+  //id 'com.gradleup.shadow' version '8.3.0'
+}
 
 repositories {
     mavenCentral()
+    //gradlePluginPortal()
     maven {
         url 'https://artifacts.openmicroscopy.org/artifactory/maven/'
         url "https://jitpack.io"
@@ -10,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    // last commit 2020-12-07
+    // last commit 2020-12-07. no extra depends. slightly faster?
     implementation 'com.github.cabeen:niftijio:master-SNAPSHOT'
 
     // 2024 stable-7.3.1, but 8.0 is near. nifti reader unlikely to change
@@ -18,4 +22,14 @@ dependencies {
 }
 application {
     mainClass = 'niimean.NiftiMean'
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "niimean.NiftiMean"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
