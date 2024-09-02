@@ -57,7 +57,7 @@ out/$(CPU)/niimean/%.csv: scripts/% | out/$(CPU)/niimean/
 	$(BENCHCMD) $@ $^
 
 # java specific (avoid sh overhead; todo: compile with GraalVM?)
-out/$(CPU)/niimean/java.csv: build/libs/rosetta-nii.jar | out/$(CPU)/niimean/
+out/$(CPU)/niimean/niimean.java.csv: build/libs/rosetta-nii.jar | out/$(CPU)/niimean/
 	$(BENCHCMD) $@ 'java -jar $^'
 
 # these can probably go into sh scripts.
