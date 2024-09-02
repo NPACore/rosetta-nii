@@ -5,6 +5,11 @@ Currently implementing
  * `niimean` -- mean of nii.gz dataset
  * `voxcor` -- correlation within each ROI between two 3D images.
 
+Use
+  * `make` to run shootout.
+  * `make check` to confirm implemenations are correct.
+  * `make depends` to run [`setup.bash`](setup.bash), more in [#setup](#setup)
+
 Also see
  * https://benchmarksgame-team.pages.debian.net/benchmarksgame/  -- run time benchmarks across many languages and tasks
  * https://julialang.org/benchmarks/  -- run times for science specific tasks and environments
@@ -14,11 +19,12 @@ Also see
 
  * Rust, Julia, and Perl have [Int16 overruns](https://github.com/JuliaNeuroscience/NIfTI.jl/issues/70) that were not obvious. The issue is observed reading in an int16 nii.gz and summing over the large image (to calculate mean). Scaling and un-scaling is a fast workaround for Julia that does not work in perl. Using Int16 is faster than double but is inaccurate (unless rewritten to calculate a running mean).
  * Runtime startups are especially slow for R and julia (and matlab). See [`within-env/`](within-env).
+ * Java/JVM is on par with golang and slower than python/numpy. How to implement SIMD optimization is not immediately obvious. library/packaging is a pain without an IDE. See [jvm.md](jvm.md) for notes.
+ * `perl` library dependencies (namely `PDL`) is esay on debian, but diffcult on Archlinux (AUR packages fail to compile.)
  * Missing implementation
-   * I couldn't find a elixir/erlang, php, or ruby nifti libraries
+   * I couldn't find nifi libaries for elixir/erlang (BEAM), php, nor ruby. Foreign Function Interface scares me and I haven't been able to figure out using FFI.
    * common lisps also does not have a ready library, but implementation with `lisp-binary` looks feasible. and using  `april` for APL style math is an interesting prospect.
    * [`patch/`](patch/) adds gzip support to `PDL::IO::Nifti`.
-   * Java (and clojure and scala) would be interesting but getting a nifti library imported has been challenging, and SIMD optimization is not immediately obvious. See [jvm.md](jvm.md) for notes.
 
 ## Results
 
