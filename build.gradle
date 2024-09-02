@@ -1,0 +1,21 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://artifacts.openmicroscopy.org/artifactory/maven/'
+        url "https://jitpack.io"
+    }
+}
+
+dependencies {
+    // last commit 2020-12-07
+    implementation 'com.github.cabeen:niftijio:master-SNAPSHOT'
+
+    // 2024 stable-7.3.1, but 8.0 is near. nifti reader unlikely to change
+    // implementation(group: 'ome', name: 'formats-gpl', version: '7.3.1')
+}
+application {
+    mainClass = 'niimean.NiftiMean'
+}

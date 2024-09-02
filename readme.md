@@ -18,7 +18,7 @@ Also see
    * I couldn't find a elixir/erlang, php, or ruby nifti libraries
    * common lisps also does not have a ready library, but implementation with `lisp-binary` looks feasible. and using  `april` for APL style math is an interesting prospect.
    * [`patch/`](patch/) adds gzip support to `PDL::IO::Nifti`.
-   * Java would be interesting but getting a nifti library w/o installing a full IDE was not immediately obvious.
+   * Java (and clojure and scala) would be interesting but getting a nifti library imported has been challenging, and SIMD optimization is not immediately obvious. See [jvm.md](jvm.md) for notes.
 
 ## Results
 

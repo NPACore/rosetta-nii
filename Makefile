@@ -1,10 +1,10 @@
-.PHONY: all check
+.PHONY: all check scripts/niimean.java
 
 ## Setup
 NRUN := 15
 CPU := $(shell ./cpu-info.pl)
-BENCHCMD := hyperfine --warmup 1 -m $(NRUN) --export-csv
-NIIMEAN_SCRIPTS := $(wildcard scripts/niimean*) scripts/niimean.rs scripts/niimean.go
+BENCHCMD := hyperfine -i --warmup 1 -m $(NRUN) --export-csv
+NIIMEAN_SCRIPTS := $(wildcard scripts/niimean*) scripts/niimean.rs scripts/niimean.go scripts/niimean.java
 VOXCOR_SCRIPTS := $(wildcard scripts/voxcor*)
 
 all:  out/rank_plot.png
@@ -28,6 +28,12 @@ scripts/niimean.go: niimean/main.go util/util.go
 	cd niimean && go build
 	mv niimean/niimean $@
 
+## java
+scripts/niimean.java: build/libs/rosetta-nii.jar
+
+build/libs/rosetta-nii.jar: src/main/java/niimean/NiftiMean.java
+	gradle build
+
 ## benchmarks
 
 # define output files for each file in scripts
@@ -45,6 +51,10 @@ out/$(CPU)/voxcor/%.csv: scripts/% | out/$(CPU)/voxcor/
 # generic
 out/$(CPU)/niimean/%.csv: scripts/% | out/$(CPU)/niimean/
 	$(BENCHCMD) $@ $^
+
+# java specific (avoid sh for overhead; todo: compile with GraalVM?)
+out/$(CPU)/niimean/java.csv: build/libs/rosetta-nii.jar | out/$(CPU)/niimean/
+	$(BENCHCMD) $@ 'java -cp $^ niimean.NiftiMean'
 
 # these can probably go into sh scripts.
 #   will that add any overhead?
