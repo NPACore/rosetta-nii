@@ -10,6 +10,9 @@ VOXCOR_SCRIPTS := $(wildcard scripts/voxcor*)
 all:  out/rank_plot.png
 check: out/$(CPU)/checks.txt
 
+depends:
+	./setup.bash
+
 out/rank_plot.png: out/$(CPU)/versions.txt
 	Rscript plot.R
 

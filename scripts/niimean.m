@@ -5,7 +5,7 @@
 %   pkg load image
 %   x = niftiread('...');
 %instead, using spm12
-% cd spm12/src && make PLATFORM=octave instal
+% cd spm12/src && make PLATFORM=octave install
 addpath('~/Downloads/spm12')
 x =  spm_vol('wf-mp2rage-7t_2017087.nii.gz');
 fprintf('%.5f\n', mean(x.dat,'all'))

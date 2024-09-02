@@ -88,10 +88,14 @@ make NRUN=10
 ## Setup
 
 Benchmarking uses [`hyperfine`](https://github.com/sharkdp/hyperfine).
+See [`./setup.bash`](setup.bash) for some library setup automation/hints (also `make depends`).
 
 * c
-  - `3dBrickstat` is from AFNI
-  - `fslstats` is from fsl
+  - `3dBrickstat` is from [AFNI](https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instructs/index.html)
+  - `fslstats` is from [fsl](https://fsl.fmrib.ox.ac.uk/fsl/docs/)
+* c++
+  - `mris_calc` from [freesurfer](https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall)
+  - `MeasureMinMaxMean` from [ANTs](https://github.com/ANTsX/ANTs)
 * rust
   - `[rustup](https://rustup.rs/) update`
 * octave
@@ -104,6 +108,10 @@ Benchmarking uses [`hyperfine`](https://github.com/sharkdp/hyperfine).
 * deno
   - `cargo install deno`
   - first run will pull in npm package `nifti-reader-js`
+* julia
+  - `NiFti` and `Statistics`
+* perl
+  - `PDL` and [`patch/Niftigz.pm`](patch/Niftigz.pm)
 
 ### Debain stable (12.0 "bookworm") in 2023
 
@@ -127,7 +135,8 @@ NB. but use debian backport https://wiki.debian.org/SimpleBackportCreation
   - [ ] parallel processing
 - [ ] containerize benchmarks
 - [ ] other implementations
+  - [ ] does GraalVM native improve java benchmarks (faster startup)?
+  - [ ] clojure/[babashka](https://github.com/babashka/babashka)
   - [ ] julia's APL implementation
-  - [ ] fix perl's `PDL::IO::Nifti` to work with compresssed images (remove extra seek)
-  - [ ] common lisp or guile version (ffi w/ niftilib)
+  - [ ] common lisp or guile/scheme version (ffi w/ niftilib)
   - [ ] [compile julia](https://docs.juliahub.com/PackageCompiler/MMV8C/1.2.1/devdocs/binaries_part_2.html)

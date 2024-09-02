@@ -7,3 +7,7 @@ scripts/*.rs
 t/*nii.gz
 .RData
 .Rhistory
+syn*nii.gz
+# java
+.gradle/
+build/
