@@ -31,6 +31,10 @@ scripts/niimean.go: niimean/main.go util/util.go
 	cd niimean && go build
 	mv niimean/niimean $@
 
+scripts/niimean.fortran: niimean.f90
+	gfortran $< -o $@
+	#fpm run niimean --runner |xargs -rI{} cp {} $@
+
 ## java
 scripts/niimean.java: build/libs/rosetta-nii.jar
 	# this is a phony target

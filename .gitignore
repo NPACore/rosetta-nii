@@ -4,6 +4,7 @@ niimean/niimean
 out/*/niimean/
 scripts/*.go
 scripts/*.rs
+scripts/*.fortran
 t/*nii.gz
 .RData
 .Rhistory

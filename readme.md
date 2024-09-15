@@ -7,7 +7,7 @@ Currently implementing
 
 Use
   * `make` to run shootout.
-  * `make check` to confirm implemenations are correct.
+  * `make check` to confirm implementations are correct.
   * `make depends` to run [`setup.bash`](setup.bash), more in [#setup](#setup)
 
 Also see
@@ -17,13 +17,14 @@ Also see
 
 ## Implementation Notes
 
- * Rust, Julia, and Perl have [Int16 overruns](https://github.com/JuliaNeuroscience/NIfTI.jl/issues/70) that were not obvious. The issue is observed reading in an int16 nii.gz and summing over the large image (to calculate mean). Scaling and un-scaling is a fast workaround for Julia that does not work in perl. Using Int16 is faster than double but is inaccurate (unless rewritten to calculate a running mean).
+ * Rust, Julia, Fortran, and Perl have [Int16 overruns](https://github.com/JuliaNeuroscience/NIfTI.jl/issues/70) that were not obvious. The issue is observed reading in an int16 nii.gz and summing over the large image (to calculate mean). Scaling and un-scaling is a fast workaround for Julia that does not work in perl. Using Int16 is faster than double but is inaccurate (unless rewritten to calculate a running mean).
  * Runtime startups are especially slow for R and julia (and matlab). See [`within-env/`](within-env).
- * Java/JVM is on par with golang and slower than python/numpy. How to implement SIMD optimization is not immediately obvious. library/packaging is a pain without an IDE. See [jvm.md](jvm.md) for notes.
- * `perl` library dependencies (namely `PDL`) is esay on debian, but diffcult on Archlinux (AUR packages fail to compile.)
+ * Java/JVM is on par with golang and slower than python/numpy. How to implement SIMD optimization is not immediately obvious. Library/packaging is a pain without an IDE. See [jvm.md](jvm.md) for notes.
+ * I couldn't find a fortran nifti library. For [`niimean.f90`](./niimean.f90), I'm using an already-uncompressed nifti with fixed parameters (e.g. assumes datatype=real) without shape (1D array a la javascript). When keeping the array `real` type, mean is calculated in ~70ms but the results are off (Int16 overrun). Recasting the type to `real(16)` is much slower (~400ms) but accurate. `stdlib_stats`'s `mean` was slightly slower (80ms) and increased the binary size from 20K to 2.8M, but did not handle the overrun any better. Using a loop to accumulate the sum was slower than type recasting (500 vs 400ms) but both provide an accurate mean calculation. 
+ * `perl` library dependencies (namely `PDL`) is easy on debian, but difficult on Archlinux (AUR packages fail to compile.)
  * Missing implementation
-   * I couldn't find nifi libaries for elixir/erlang (BEAM), php, nor ruby. Foreign Function Interface scares me and I haven't been able to figure out using FFI.
-   * common lisps also does not have a ready library, but implementation with `lisp-binary` looks feasible. and using  `april` for APL style math is an interesting prospect.
+   * I couldn't find nifi libraries for elixir/erlang (BEAM), php, nor ruby. Foreign Function Interface scares me and I haven't been able to figure out using FFI.
+   * common lisp is also missing a ready library, but implementation with `lisp-binary` looks feasible. And using  `april` for APL style math is an interesting prospect.
    * [`patch/`](patch/) adds gzip support to `PDL::IO::Nifti`.
 
 ## Results

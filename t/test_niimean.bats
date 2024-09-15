@@ -50,3 +50,9 @@ test_niimean_java() { #@test
   run java -jar build/libs/rosetta-nii.jar
   check_mean "$output"
 }
+
+test_niimean_fortran() { #@test
+  test -r scripts/niimean.fortran || skip
+  run scripts/niimean.fortran
+  check_mean "$output"
+}
